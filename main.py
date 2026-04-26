@@ -21,7 +21,7 @@ CIRCLE_WIDTH = 15
 CROSS_WIDTH = 25
 
 screen = pygame.display.set_mode((WIDTH,HEIGHT))
-pygame.display.set_caption('Tic Tac Toe')
+pygame.display.set_caption('Tic Tac Toe AI')
 screen.fill(BLACK)
 
 board = np.zeros((BOARD_ROWS,BOARD_COLS))
@@ -126,6 +126,7 @@ def restart_game():
             board[row][col] = 0
 
 def main():
+    restart_time = None
     draw_lines()
     player = 1
     game_over = False
@@ -165,6 +166,9 @@ def main():
         if not game_over:
             draw_figures()
         else:
+            if restart_time is None:
+                restart_time = pygame.time.get_ticks()
+
             if check_win(1):
                 draw_figures(GREEN)
                 draw_lines(GREEN)
@@ -174,6 +178,12 @@ def main():
             else:
                 draw_figures(GREY)
                 draw_lines(GREY)
+
+            if pygame.time.get_ticks() - restart_time > 3000:
+                restart_game()
+                game_over = False
+                player = 1
+                restart_time = None
         pygame.display.update()
 
 main()
